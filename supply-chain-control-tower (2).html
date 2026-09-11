@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Supply Chain Control Tower · Jiayi Chen</title>
+<meta name="description" content="A dbt project that joins purchase orders, shipments, and warehouse receipts into one model, with 40 tests and a ranked exception queue.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --ground:#FFFFFF;
+  --ground-2:#F7F7F5;
+  --line:#E2E2DE;
+  --line-strong:#C9C9C3;
+  --ink:#1A1A1A;
+  --ink-2:#4A4A46;
+  --ink-3:#807D77;
+  --red:#C5050C;
+  --ontime:#1B7A4B;
+  --risk:#B06F00;
+  --late:#C5050C;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+@media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}*{transition:none!important}}
+body{background:var(--ground);color:var(--ink);font-family:'IBM Plex Sans',system-ui,sans-serif;font-size:17px;line-height:1.6;-webkit-font-smoothing:antialiased}
+.wrap{max-width:860px;margin:0 auto;padding:0 32px}
+@media(max-width:640px){.wrap{padding:0 20px}body{font-size:16px}}
+code,.mono{font-family:'IBM Plex Mono',monospace}
+
+nav{position:sticky;top:0;z-index:50;background:rgba(255,255,255,.94);backdrop-filter:blur(10px);border-bottom:1px solid var(--line)}
+nav .wrap{display:flex;align-items:center;justify-content:space-between;height:60px}
+nav .back{color:var(--ink-2);text-decoration:none;font-size:14px}
+nav .back:hover,nav .back:focus-visible{color:var(--ink)}
+nav .links{display:flex;gap:22px;font-size:14px}
+nav .links a{color:var(--ink-2);text-decoration:none}
+nav .links a:hover,nav .links a:focus-visible{color:var(--ink)}
+@media(max-width:560px){nav .links a:not(:last-child){display:none}}
+
+header{padding:88px 0 56px;border-bottom:1px solid var(--line)}
+.eyebrow{font-size:13px;color:var(--red);margin-bottom:24px;font-weight:600;letter-spacing:.06em;text-transform:uppercase}
+h1{font-size:clamp(30px,5vw,46px);line-height:1.12;font-weight:600;letter-spacing:-.02em;margin-bottom:22px;max-width:18ch}
+.lede{font-size:18px;color:var(--ink-2);max-width:60ch;margin-bottom:28px}
+.stack-tags{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:28px}
+.stack-tags span{font-size:13px;color:var(--ink-2);border:1px solid var(--line);padding:4px 10px;border-radius:2px}
+.hero-links{display:flex;flex-wrap:wrap;gap:20px;font-size:15px}
+.hero-links a{color:var(--ink);text-decoration:none;border-bottom:1px solid var(--line);padding-bottom:2px}
+.hero-links a:hover,.hero-links a:focus-visible{border-color:var(--ink)}
+
+.metrics{border-bottom:1px solid var(--line);background:var(--ground-2);padding:40px 0}
+.metrics .grid{display:grid;grid-template-columns:repeat(4,1fr);gap:28px}
+.metrics .v{font-family:'IBM Plex Mono',monospace;font-size:clamp(22px,3vw,28px);font-weight:500;letter-spacing:-.02em;color:var(--red);display:block;margin-bottom:6px}
+.metrics .l{font-size:13px;color:var(--ink-2);line-height:1.4}
+@media(max-width:640px){.metrics .grid{grid-template-columns:repeat(2,1fr);gap:24px}}
+
+section{padding:64px 0;border-bottom:1px solid var(--line)}
+.kicker{font-size:13px;color:var(--red);margin-bottom:14px;font-weight:600;letter-spacing:.06em;text-transform:uppercase}
+h2{font-size:clamp(22px,2.8vw,28px);font-weight:600;letter-spacing:-.015em;line-height:1.25;margin-bottom:18px;max-width:26ch}
+p.body{color:var(--ink-2);max-width:64ch;margin-bottom:18px}
+p.body:last-child{margin-bottom:0}
+
+.flow{font-family:'IBM Plex Mono',monospace;font-size:13px;color:var(--ink-2);border:1px solid var(--line);padding:14px 16px;overflow-x:auto;white-space:nowrap;margin:24px 0}
+
+table{width:100%;border-collapse:collapse;margin:20px 0;font-size:15px}
+th,td{text-align:left;padding:10px 14px 10px 0;border-bottom:1px solid var(--line);vertical-align:top}
+th{font-size:13px;color:var(--ink-3);font-weight:500}
+td{color:var(--ink-2)}
+td.status{color:var(--ink);font-family:'IBM Plex Mono',monospace;font-size:13.5px;white-space:nowrap}
+.dot{display:inline-block;width:8px;height:8px;border-radius:50%;margin-right:8px;vertical-align:middle}
+.dot.ok{background:var(--ontime)}.dot.rk{background:var(--risk)}.dot.lt{background:var(--late)}
+
+.testgrid{display:grid;grid-template-columns:1fr;gap:1px;background:var(--line);border:1px solid var(--line);margin:24px 0}
+.testrow{background:var(--ground);padding:16px 18px;display:grid;grid-template-columns:280px 1fr;gap:18px}
+.testrow .t{font-family:'IBM Plex Mono',monospace;font-size:13px;color:var(--red);font-weight:500}
+.testrow .d{font-size:14px;color:var(--ink-2)}
+@media(max-width:640px){.testrow{grid-template-columns:1fr;gap:6px}}
+
+.callout{border-left:3px solid var(--red);padding:4px 0 4px 20px;margin:24px 0;color:var(--ink-2)}
+.callout b{color:var(--ink);font-weight:600}
+
+.codeblock{background:var(--ground-2);border:1px solid var(--line);padding:18px 20px;overflow-x:auto;margin:20px 0}
+.codeblock pre{font-family:'IBM Plex Mono',monospace;font-size:13.5px;color:var(--ink-2);line-height:1.6}
+.codeblock .c1{color:var(--ink-3)}
+.codeblock .c2{color:var(--ontime);font-weight:500}
+
+ul.plain{list-style:none;color:var(--ink-2)}
+ul.plain li{padding:6px 0 6px 20px;position:relative}
+ul.plain li:before{content:"—";position:absolute;left:0;color:var(--ink-3)}
+
+footer{padding:64px 0 56px}
+.footlinks{display:flex;flex-wrap:wrap;gap:22px;font-size:16px;margin-top:22px}
+.footlinks a{color:var(--ink);text-decoration:none;border-bottom:1px solid var(--line);padding-bottom:2px}
+.footlinks a:hover,.footlinks a:focus-visible{border-color:var(--ink)}
+.colophon{margin-top:44px;font-size:13.5px;color:var(--ink-3)}
+a:focus-visible{outline:2px solid var(--red);outline-offset:3px}
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="wrap">
+    <a class="back" href="index.html">← Jiayi Chen</a>
+    <div class="links">
+      <a href="#build">The build</a>
+      <a href="#quality">Data quality</a>
+      <a href="#run">Run it</a>
+      <a href="https://github.com/Jiayi0115/supply-chain-control-tower">GitHub</a>
+    </div>
+  </div>
+</nav>
+
+<header>
+  <div class="wrap">
+    <p class="eyebrow">Analytics engineering · operational infrastructure</p>
+    <h1>Supply Chain Control Tower</h1>
+    <p class="lede">One model, one source of truth, one queue of what needs action. A dbt project that joins purchase orders, shipments, and warehouse receipts into a single model, then turns it into the list an operations team opens every morning.</p>
+    <div class="stack-tags">
+      <span>dbt</span><span>DuckDB</span><span>SQL</span><span>Python</span><span>Streamlit</span>
+    </div>
+    <div class="hero-links">
+      <a href="https://github.com/Jiayi0115/supply-chain-control-tower">View repo →</a>
+      <a href="index.html#work">Back to projects</a>
+    </div>
+  </div>
+</header>
+
+<div class="metrics">
+  <div class="wrap">
+    <div class="grid">
+      <div><span class="v">10</span><span class="l">dbt models, staging to marts</span></div>
+      <div><span class="v">40</span><span class="l">Tests, zero errors on build</span></div>
+      <div><span class="v">5</span><span class="l">Shipment statuses, computed once</span></div>
+      <div><span class="v">0</span><span class="l">Credentials needed to run it</span></div>
+    </div>
+  </div>
+</div>
+
+<section id="origin">
+  <div class="wrap">
+    <p class="kicker">Why this exists</p>
+    <h2>The answer to "where is my order" lived in three systems that didn't talk.</h2>
+    <p class="body">The ERP knows what was ordered and what the vendor promised. The freight forwarder knows what shipped and when it's due. The warehouse knows what actually landed. Nobody holds all three, so the answer gets assembled by hand, in a spreadsheet, every morning.</p>
+    <p class="body">I built the first version of this for myself, to stop chasing shipment status across systems. It became the visibility layer other departments started running on.</p>
+  </div>
+</section>
+
+<section id="build">
+  <div class="wrap">
+    <p class="kicker">The build</p>
+    <h2>The status logic lives in one place, not five dashboards.</h2>
+    <p class="body">Every layer has one job. Staging only types and renames. Intermediate does the joins and the timing math. Marts decide what the business calls "late" — once — so every consumer of the data agrees on what the words mean.</p>
+    <div class="flow">raw sources → staging (4) → intermediate (2) → marts (4) → exception queue → dashboard</div>
+
+    <table>
+      <tr><th>Status</th><th>Meaning</th></tr>
+      <tr><td class="status"><span class="dot ok"></span>ON_TIME</td><td>Landed on or before the estimated arrival date</td></tr>
+      <tr><td class="status"><span class="dot rk"></span>IN_TRANSIT</td><td>Moving, not yet due</td></tr>
+      <tr><td class="status"><span class="dot rk"></span>AT_RISK</td><td>Moving, due within 7 days</td></tr>
+      <tr><td class="status"><span class="dot lt"></span>LATE</td><td>Past ETA, in transit or delivered late</td></tr>
+      <tr><td class="status"><span class="dot rk"></span>NEEDS_REVIEW</td><td>Arrived with no warehouse receipt, or received short</td></tr>
+    </table>
+
+    <p class="body">The exception queue reads directly off that status. Every open item carries a plain-language reason and a priority — high-value late shipments and unreconciled receipts rise to the top. That's the model people actually open.</p>
+  </div>
+</section>
+
+<section id="quality">
+  <div class="wrap">
+    <p class="kicker">Data quality</p>
+    <h2>Forty tests run on every build, not as a checkbox.</h2>
+    <p class="body">Generic tests cover the basics — not_null and unique on every key, relationships across the whole chain from receipt to shipment to PO to vendor, accepted values on status and mode. The custom tests are the ones that catch real operational failures.</p>
+
+    <div class="testgrid">
+      <div class="testrow"><span class="t">assert_arrival_after_ship_date</span><span class="d">A shipment can't land before it leaves — catches source date bugs and timezone handling</span></div>
+      <div class="testrow"><span class="t">assert_no_negative_transit_days</span><span class="d">Guards the calculation the on-time metric is built from</span></div>
+      <div class="testrow"><span class="t">assert_receipt_not_before_arrival</span><span class="d">Catches receipts keyed against the wrong shipment</span></div>
+      <div class="testrow"><span class="t">assert_exception_queue_matches_fact</span><span class="d">Queue can't drift from the fact table — nobody works a stale list</span></div>
+      <div class="testrow"><span class="t">assert_on_time_rate_in_bounds</span><span class="d">Percentages outside 0–100 mean the metric broke</span></div>
+    </div>
+
+    <div class="callout"><b>These aren't decorative.</b> assert_arrival_after_ship_date caught a real bug on the first build — 25 synthetic shipments landing before they shipped, from an early-arrival offset that wasn't clamped to the transit window. The test failed, the generator got fixed. That's what the tests are for.</div>
+  </div>
+</section>
+
+<section id="run">
+  <div class="wrap">
+    <p class="kicker">Run it</p>
+    <h2>Clone and run. No cloud account, no credentials.</h2>
+    <div class="codeblock"><pre><span class="c1"># install</span>
+pip install -r requirements.txt
+
+<span class="c1"># generate synthetic source data into a local DuckDB file</span>
+python scripts/generate_source_data.py
+
+<span class="c1"># build all models, run all 40 tests</span>
+dbt build --profiles-dir .
+<span class="c2">Done. PASS=50 WARN=0 ERROR=0 SKIP=0 TOTAL=50</span>
+
+<span class="c1"># open the operations view</span>
+streamlit run app/dashboard.py</pre></div>
+    <p class="body">Everything downstream of staging is source-agnostic. Swapping the generator for an ERP extract means rewriting four staging models and nothing else — which is the reason the staging layer exists.</p>
+  </div>
+</section>
+
+<section id="next">
+  <div class="wrap">
+    <p class="kicker">What I'd add next</p>
+    <ul class="plain">
+      <li>Snapshots on shipment status, so the queue can answer "how long has this been stuck," not only "is it stuck"</li>
+      <li>Incremental materialization on fct_shipments once volume justifies it</li>
+      <li>Freight cost per unit shipped as a sourcing metric, joined to vendor performance</li>
+      <li>Airflow orchestration in place of manual runs</li>
+    </ul>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <p class="kicker">See more</p>
+    <h2>The rest of the work.</h2>
+    <div class="footlinks">
+      <a href="index.html#work">Back to projects</a>
+      <a href="https://github.com/Jiayi0115/supply-chain-control-tower">GitHub repo</a>
+      <a href="mailto:jiayichene5@gmail.com">jiayichene5@gmail.com</a>
+    </div>
+    <p class="colophon">Jiayi Chen · Analytics Engineer · Supply chain, operations and AI automation</p>
+  </div>
+</footer>
+
+</body>
+</html>

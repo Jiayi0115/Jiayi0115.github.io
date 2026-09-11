@@ -1,0 +1,359 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Jiayi Chen · Analytics Engineer</title>
+<meta name="description" content="Analytics Engineer. Recovered $768.8K in duties, then built the systems behind the number: SAP-to-Databricks pipelines, exception queues, and AI workflow automation.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --ground:#FFFFFF;
+  --ground-2:#F7F7F5;
+  --line:#E2E2DE;
+  --line-strong:#C9C9C3;
+  --ink:#1A1A1A;
+  --ink-2:#4A4A46;
+  --ink-3:#807D77;
+  --red:#C5050C;
+  --ontime:#1B7A4B;
+  --risk:#B06F00;
+  --late:#C5050C;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+@media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}*{transition:none!important}}
+body{
+  background:var(--ground);
+  color:var(--ink);
+  font-family:'IBM Plex Sans',system-ui,sans-serif;
+  font-size:17px;line-height:1.6;
+  -webkit-font-smoothing:antialiased;
+}
+.wrap{max-width:920px;margin:0 auto;padding:0 32px}
+@media(max-width:640px){.wrap{padding:0 20px}body{font-size:16px}}
+
+/* nav */
+nav{
+  position:sticky;top:0;z-index:50;
+  background:rgba(255,255,255,.94);
+  backdrop-filter:blur(10px);
+  border-bottom:1px solid var(--line);
+}
+nav .wrap{display:flex;align-items:center;justify-content:space-between;height:60px;gap:24px}
+nav .name{font-weight:600;letter-spacing:-.01em;color:var(--ink);text-decoration:none;font-size:16px}
+nav .links{display:flex;gap:24px;font-size:14px}
+nav .links a{color:var(--ink-2);text-decoration:none}
+nav .links a:hover,nav .links a:focus-visible{color:var(--ink)}
+@media(max-width:640px){nav .links{gap:16px;font-size:13px}nav .links .hide-sm{display:none}}
+
+/* hero */
+header{padding:96px 0 72px;border-bottom:1px solid var(--line)}
+.eyebrow{font-size:13px;color:var(--red);margin-bottom:28px;font-weight:600;letter-spacing:.06em;text-transform:uppercase}
+h1{
+  font-size:clamp(34px,5.4vw,54px);
+  line-height:1.1;font-weight:600;letter-spacing:-.025em;
+  margin-bottom:28px;max-width:16ch;
+}
+.lede{font-size:19px;color:var(--ink-2);max-width:62ch;margin-bottom:32px}
+.meta{font-size:15px;color:var(--ink-3);max-width:62ch;margin-bottom:24px}
+.badge{
+  display:inline-block;font-size:14px;font-weight:500;
+  color:var(--red);border:1px solid rgba(197,5,12,.30);
+  background:rgba(197,5,12,.05);
+  padding:7px 14px;border-radius:3px;margin-bottom:32px;
+}
+.hero-links{display:flex;flex-wrap:wrap;gap:20px;font-size:15px}
+.hero-links a{color:var(--ink);text-decoration:none;border-bottom:1px solid var(--line);padding-bottom:2px}
+.hero-links a:hover,.hero-links a:focus-visible{border-color:var(--ink)}
+
+/* pipeline: a real sequence, so it is numbered */
+.pipeline{border-bottom:1px solid var(--line);background:var(--ground-2);padding:36px 0}
+.pipeline ol{list-style:none;display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:var(--line);border:1px solid var(--line)}
+.pipeline li{background:var(--ground);padding:18px 20px}
+.pipeline .n{font-family:'IBM Plex Mono',monospace;font-size:12px;color:var(--red);font-weight:500;display:block;margin-bottom:8px}
+.pipeline .s{font-weight:600;font-size:15px;display:block;margin-bottom:4px}
+.pipeline .d{font-size:13px;color:var(--ink-2);line-height:1.45}
+@media(max-width:760px){.pipeline ol{grid-template-columns:repeat(2,1fr)}}
+
+/* metrics */
+.metrics{border-bottom:1px solid var(--line);padding:44px 0}
+.metrics .grid{display:grid;grid-template-columns:repeat(4,1fr);gap:32px}
+.metrics .v{font-family:'IBM Plex Mono',monospace;font-size:clamp(24px,3.4vw,32px);font-weight:500;letter-spacing:-.02em;color:var(--red);display:block;margin-bottom:6px}
+.metrics .l{font-size:13.5px;color:var(--ink-2);line-height:1.4}
+@media(max-width:760px){.metrics .grid{grid-template-columns:repeat(2,1fr);gap:28px}}
+
+/* sections */
+section{padding:76px 0;border-bottom:1px solid var(--line)}
+.kicker{font-size:13px;color:var(--red);margin-bottom:14px;font-weight:600;letter-spacing:.06em;text-transform:uppercase}
+h2{font-size:clamp(24px,3.2vw,32px);font-weight:600;letter-spacing:-.02em;line-height:1.22;margin-bottom:16px;max-width:24ch}
+.sub{color:var(--ink-2);max-width:60ch;margin-bottom:44px}
+
+/* what i do */
+.pillars{display:grid;grid-template-columns:repeat(3,1fr);gap:36px}
+.pillars h3{font-size:17px;font-weight:600;margin-bottom:10px}
+.pillars p{font-size:15px;color:var(--ink-2)}
+.pillars .k{font-family:'IBM Plex Mono',monospace;font-size:12px;color:var(--red);font-weight:500;display:block;margin-bottom:12px}
+@media(max-width:760px){.pillars{grid-template-columns:1fr;gap:32px}}
+
+/* projects */
+.proj{border-top:1px solid var(--line);padding:40px 0}
+.proj:last-of-type{padding-bottom:0}
+.proj .tag{font-size:13.5px;color:var(--ink-3);margin-bottom:14px}
+.proj .tag .dot{color:var(--line);margin:0 8px}
+.proj h3{font-size:22px;font-weight:600;letter-spacing:-.015em;margin-bottom:8px}
+.proj .spec{font-family:'IBM Plex Mono',monospace;font-size:13px;color:var(--ink-3);margin-bottom:18px}
+.proj p{color:var(--ink-2);max-width:64ch;margin-bottom:18px}
+.stack-tags{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:18px}
+.stack-tags span{font-size:13px;color:var(--ink-2);border:1px solid var(--line);padding:4px 10px;border-radius:2px}
+.proj a.more{color:var(--ink);font-size:15px;text-decoration:none;border-bottom:1px solid var(--line);padding-bottom:2px}
+.proj a.more:hover,.proj a.more:focus-visible{border-color:var(--ink)}
+.note{font-size:13.5px;color:var(--ink-3);margin-top:14px}
+
+/* status legend — meaning, not decoration */
+.legend{display:flex;flex-wrap:wrap;gap:18px;margin:20px 0;font-size:13.5px;color:var(--ink-2)}
+.legend b{font-weight:500}
+.sw{display:inline-block;width:9px;height:9px;border-radius:50%;margin-right:7px;vertical-align:middle}
+.sw.ok{background:var(--ontime)}.sw.rk{background:var(--risk)}.sw.lt{background:var(--late)}
+
+.flow{font-family:'IBM Plex Mono',monospace;font-size:13px;color:var(--ink-2);
+  border:1px solid var(--line);padding:14px 16px;overflow-x:auto;white-space:nowrap}
+
+/* stack */
+.stackgrid{display:grid;grid-template-columns:repeat(2,1fr);gap:32px}
+.stackgrid h3{font-size:14px;font-weight:600;color:var(--ink-3);margin-bottom:8px}
+.stackgrid p{font-size:15.5px;color:var(--ink-2)}
+@media(max-width:640px){.stackgrid{grid-template-columns:1fr;gap:26px}}
+
+/* experience */
+.job{display:grid;grid-template-columns:150px 1fr;gap:28px;padding:26px 0;border-top:1px solid var(--line)}
+.job .when{font-family:'IBM Plex Mono',monospace;font-size:13px;color:var(--ink-3);padding-top:3px}
+.job h3{font-size:17px;font-weight:600;margin-bottom:8px}
+.job p{font-size:15px;color:var(--ink-2);max-width:62ch}
+@media(max-width:640px){.job{grid-template-columns:1fr;gap:8px}}
+
+/* contact */
+footer{padding:76px 0 60px}
+footer h2{max-width:20ch}
+.footlinks{display:flex;flex-wrap:wrap;gap:22px;font-size:16px;margin-top:26px}
+.footlinks a{color:var(--ink);text-decoration:none;border-bottom:1px solid var(--line);padding-bottom:2px}
+.footlinks a:hover,.footlinks a:focus-visible{border-color:var(--ink)}
+.colophon{margin-top:52px;font-size:13.5px;color:var(--ink-3)}
+a:focus-visible,button:focus-visible{outline:2px solid var(--red);outline-offset:3px}
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="wrap">
+    <a class="name" href="#top">Jiayi Chen.</a>
+    <div class="links">
+      <a href="#work">Projects</a>
+      <a href="#stack" class="hide-sm">Stack</a>
+      <a href="#experience" class="hide-sm">Experience</a>
+      <a href="mailto:jiayichene5@gmail.com">Contact</a>
+    </div>
+  </div>
+</nav>
+
+<header id="top">
+  <div class="wrap">
+    <p class="eyebrow">Analytics Engineer · Supply chain, operations &amp; AI automation</p>
+    <h1>From reading the data to building the systems that decide on it.</h1>
+    <p class="lede">I started in finance, where every number had to tie back to a decision. Then I found the part most analysts skip: the messy operational data underneath, the part nobody trusts. So I started fixing it. Today I build the pipelines, models, and exception logic that turn fragmented supply chain records into decisions people act on.</p>
+    <p class="meta">American Fork, UT — open to relocation to California / Supply chain, manufacturing &amp; logistics data / Open to Analytics Engineer, Data Engineer, and Supply Chain Analytics roles</p>
+    <p class="badge">H-1B secured — cap-exempt transfer, no lottery</p>
+    <div class="hero-links">
+      <a href="#work">See the work</a>
+      <a href="resume.pdf">Résumé (PDF)</a>
+      <a href="https://github.com/Jiayi0115">GitHub</a>
+      <a href="https://www.linkedin.com/in/jiayi5/">LinkedIn</a>
+      <a href="mailto:jiayichene5@gmail.com">jiayichene5@gmail.com</a>
+    </div>
+  </div>
+</header>
+
+<div class="pipeline">
+  <div class="wrap">
+    <ol>
+      <li><span class="n">01</span><span class="s">Ingest</span><span class="d">SAP ERP, shipment APIs, customs records</span></li>
+      <li><span class="n">02</span><span class="s">Model</span><span class="d">Clean, join, define the grain</span></li>
+      <li><span class="n">03</span><span class="s">Test</span><span class="d">Validate until the metric is trusted</span></li>
+      <li><span class="n">04</span><span class="s">Serve</span><span class="d">Dashboards and exception queues</span></li>
+    </ol>
+  </div>
+</div>
+
+<div class="metrics">
+  <div class="wrap">
+    <div class="grid">
+      <div><span class="v">$768.8K</span><span class="l">Customs duties recovered</span></div>
+      <div><span class="v">80%</span><span class="l">Fewer false alarms in production data</span></div>
+      <div><span class="v">40%</span><span class="l">Faster operational reporting</span></div>
+      <div><span class="v">30+</span><span class="l">Manufacturing tools monitored</span></div>
+    </div>
+  </div>
+</div>
+
+<section id="about">
+  <div class="wrap">
+    <p class="kicker">What I do</p>
+    <h2>Not an analyst who learned to build. Not an engineer who skipped the business.</h2>
+    <p class="sub">I work between raw data and the decision it has to support, and I have run the operation on both sides of that line.</p>
+    <div class="pillars">
+      <div>
+        <span class="k">A</span>
+        <h3>Model the real process</h3>
+        <p>Modeling that starts with meaning: what a row represents, which business rules shape it, and where quality breaks. Reusable transformations and clear definitions instead of one-off reports.</p>
+      </div>
+      <div>
+        <span class="k">B</span>
+        <h3>Automate the grind</h3>
+        <p>I lead TCI's AI automation initiative, working with each operations department to map where their process actually breaks, then automating the workflow behind it.</p>
+      </div>
+      <div>
+        <span class="k">C</span>
+        <h3>Lived the operation first</h3>
+        <p>I don't only model supply chain data. I run inbound and outbound international trade logistics and support company-wide procurement. I build for operations teams because I am the one the process breaks on.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="work">
+  <div class="wrap">
+    <p class="kicker">Projects</p>
+    <h2>Two halves of the operational data system.</h2>
+    <p class="sub">The finding on one side. The infrastructure that prevents the next one on the other. I build both.</p>
+
+    <article class="proj">
+      <p class="tag">Decision analytics<span class="dot">/</span>recovered revenue</p>
+      <h3>$768K Duty Recovery</h3>
+      <p class="spec">98 entries · two importer entities · IEEPA refund initiative</p>
+      <p>When the IEEPA tariffs were struck down, everything paid on them became refundable, but only for filings that correctly isolated the refundable duty layer from the non-refundable Section 232 and 301 layers stacked on top of it, and only before the CBP deadlines. I led the recovery: reconciled the customs entry data, screened every entry for eligibility, and validated the duty-line classifications.</p>
+      <div class="stack-tags">
+        <span>Customs / ACE data</span><span>Data reconciliation</span><span>Financial modeling</span><span>Compliance validation</span>
+      </div>
+      <p class="note">Employer-confidential details excluded.</p>
+    </article>
+
+    <article class="proj">
+      <p class="tag">Analytics engineering<span class="dot">/</span>operational infrastructure</p>
+      <h3>Supply Chain Control Tower</h3>
+      <p class="spec">dbt · one model · one source of truth · one queue of what needs action</p>
+      <p>Built to stop chasing shipment status across disconnected systems, it became the visibility layer other departments started running on. Purchase orders, domestic and import and export shipments, and warehouse receiving modeled into one dimensional model, then surfaced as an exception queue: every shipment classified with the reason attached.</p>
+      <div class="legend">
+        <span><i class="sw ok"></i><b>On time</b></span>
+        <span><i class="sw rk"></i><b>At risk</b></span>
+        <span><i class="sw lt"></i><b>Late</b></span>
+        <span><i class="sw rk"></i><b>Needs review</b></span>
+      </div>
+      <p>Data quality is built into the model, not bolted on: not_null and unique on every key, relationship tests from fact to dimensions, accepted values on status, plus custom tests for impossible dates and negative lead times.</p>
+      <p class="flow">sources → staging → intermediate → marts → exception queue → dashboard</p>
+      <div class="stack-tags" style="margin-top:18px">
+        <span>dbt</span><span>DuckDB</span><span>SQL</span><span>Python</span><span>Streamlit</span>
+      </div>
+      <a class="more" href="supply-chain-control-tower.html">View the project →</a>
+    </article>
+
+    <article class="proj">
+      <p class="tag">Manufacturing data quality<span class="dot">/</span>semiconductor production</p>
+      <h3>Near-Real-Time Metrology Validation</h3>
+      <p class="spec">Validation pipelines every 20 minutes · 30+ production tools</p>
+      <p>Statistical process control and root cause analysis across metrology tools in thin-film semiconductor manufacturing. Automated pipelines caught anomalies in near real time, custom JMP scripts filtered production noise and cut false alarm rates by 80 percent, and live KPI dashboards reduced troubleshooting time by half.</p>
+      <div class="stack-tags">
+        <span>Python</span><span>SQL</span><span>SPC</span><span>JMP Live</span><span>Root cause analysis</span><span>Lean Six Sigma</span>
+      </div>
+    </article>
+  </div>
+</section>
+
+<section id="stack">
+  <div class="wrap">
+    <p class="kicker">Technical stack</p>
+    <h2>The tools behind the systems.</h2>
+    <div class="stackgrid">
+      <div>
+        <h3>Languages and query</h3>
+        <p>SQL · Python (Pandas, NumPy, PySpark) · R · Stata · MATLAB</p>
+      </div>
+      <div>
+        <h3>Data engineering</h3>
+        <p>dbt · Databricks · Apache Airflow · ETL and ELT pipelines · data modeling · workflow orchestration · SAP ERP · MongoDB · EDI</p>
+      </div>
+      <div>
+        <h3>Data quality</h3>
+        <p>Statistical process control · root cause analysis · data validation · metric design</p>
+      </div>
+      <div>
+        <h3>BI and visualization</h3>
+        <p>Tableau · Power BI · JMP Live · Streamlit · dashboard automation</p>
+      </div>
+      <div>
+        <h3>Domain</h3>
+        <p>Supply chain and logistics analytics · international trade and customs · procurement · manufacturing operations</p>
+      </div>
+      <div>
+        <h3>Education</h3>
+        <p>M.S. Information, University of Wisconsin–Madison (3.93) · B.S. Economics and Finance, Xi'an Jiaotong-Liverpool University (3.8)</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="experience">
+  <div class="wrap">
+    <p class="kicker">Experience</p>
+    <h2>From finding the number to building the system.</h2>
+
+    <div class="job">
+      <p class="when">May 2026 to present</p>
+      <div>
+        <h3>Data &amp; AI Analytics Engineer · TCI Biotech USA</h3>
+        <p>Promoted after leading the duty recovery. Own production ETL pipelines from SAP ERP into Databricks and lead the AI automation initiative across operations departments. Manage inbound and outbound international trade logistics while supporting company-wide procurement.</p>
+      </div>
+    </div>
+
+    <div class="job">
+      <p class="when">Sep 2025 to May 2026</p>
+      <div>
+        <h3>Data Analyst, Supply Chain · TCI Biotech USA</h3>
+        <p>Built the SAP-to-Databricks pipeline layer modeling shipment, inventory, warehouse-order, and multi-tier vendor data into auto-refreshed dashboards. Improved reporting efficiency by 40 percent.</p>
+      </div>
+    </div>
+
+    <div class="job">
+      <p class="when">Sep 2024 to Jan 2025</p>
+      <div>
+        <h3>Data Scientist, R&amp;D Data Quality · First Solar</h3>
+        <p>Thin-film semiconductor manufacturing. Led data quality validation across metrology tools using statistical process control and root cause analysis, cutting false alarms by 80 percent and troubleshooting time by half across more than 30 production tools.</p>
+      </div>
+    </div>
+
+    <div class="job">
+      <p class="when">Jun 2022 to Sep 2022</p>
+      <div>
+        <h3>Data Analyst · Sanofi (China)</h3>
+        <p>Designed and validated SQL and MongoDB ETL pipelines standardizing more than 10 million rows of patient-demand data for enterprise reporting.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <p class="kicker">Let's talk</p>
+    <h2>Need operational data people can actually trust and use?</h2>
+    <div class="footlinks">
+      <a href="mailto:jiayichene5@gmail.com">jiayichene5@gmail.com</a>
+      <a href="https://www.linkedin.com/in/jiayi5/">LinkedIn</a>
+      <a href="https://github.com/Jiayi0115">GitHub</a>
+    </div>
+    <p class="colophon">Jiayi Chen · Analytics Engineer · Supply chain, operations and AI automation · Open to relocation to California</p>
+  </div>
+</footer>
+
+</body>
+</html>
